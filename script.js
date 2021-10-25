@@ -12,40 +12,51 @@ const canvas = document.querySelector("canvas.webgl");
 // Scene
 const scene = new THREE.Scene();
 
-// Objects
-const geometry = new THREE.BoxBufferGeometry(1, 1, 1).toNonIndexed();
+var cubeSize = 3,
+  dimensions = 3,
+  spacing = 0.5;
 
-// Materials
-const material = new THREE.MeshBasicMaterial({
-  vertexColors: true,
+var colours = [
+  0xfffa41, //yellow
+  0x8541ff, //purple
+  0xff9800, //orange
+  0x00c3ff, //blue
+  0xfd0096, //pink
+  0x49ff00, //green
+];
+var faceMaterials = colours.map(function (c) {
+  return new THREE.MeshLambertMaterial({ color: c, emissive: c });
 });
 
-// generate color data for each vertex
-const positionAttribute = geometry.getAttribute("position");
+var cubeGeometry = new THREE.BoxBufferGeometry(
+  cubeSize,
+  cubeSize,
+  cubeSize
+).toNonIndexed();
 
-const colors = [];
-const color = new THREE.Color();
-
-for (let i = 0; i < positionAttribute.count; i += 3) {
-  color.set(Math.random() * 0xffffff);
-  // define the same color for each vertex of a triangle
-  colors.push(color.r, color.g, color.b);
-  colors.push(color.r, color.g, color.b);
-  colors.push(color.r, color.g, color.b);
-  colors.push(color.r, color.g, color.b);
-  colors.push(color.r, color.g, color.b);
-  colors.push(color.r, color.g, color.b);
+function createCube(x, y, z) {
+  var cube = new THREE.Mesh(cubeGeometry, faceMaterials);
+  cube.castShadow = true;
+  cube.name = x + "-" + y + "-" + z;
+  console.log(x + "-" + y + "-" + z)
+  cube.position.x = x;
+  cube.position.y = y;
+  cube.position.z = z;
+  scene.add(cube);
 }
 
-// define the new attribute
-geometry.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
+//create cubes
+var increment = cubeSize + spacing;
 
-// Mesh
-const cube = new THREE.Mesh(geometry, material);
-scene.add(cube);
+for (var i = 0; i < dimensions; i++) {
+  for (var j = 0; j < dimensions; j++) {
+    for (var k = 0; k < dimensions; k++) {
+      createCube(i * increment, j * increment, k * increment);
+    }
+  }
+}
 
 // Lights
-
 const pointLight = new THREE.PointLight(0xffffff, 0.1);
 pointLight.position.x = 2;
 pointLight.position.y = 3;
@@ -79,14 +90,15 @@ window.addEventListener("resize", () => {
  */
 // Base camera
 const camera = new THREE.PerspectiveCamera(
-  75,
+  80,
   sizes.width / sizes.height,
   0.1,
   100
 );
-camera.position.x = 0;
-camera.position.y = 0;
-camera.position.z = 2;
+
+camera.position.x = 15;
+camera.position.y = 10;
+camera.position.z = 15;
 scene.add(camera);
 
 // Controls
@@ -99,13 +111,13 @@ controls.enableDamping = true;
 const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
 });
+//size of canvas
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 /**
  * Animate
  */
-
 const clock = new THREE.Clock();
 
 const tick = () => {
@@ -116,9 +128,32 @@ const tick = () => {
 
   // Render
   renderer.render(scene, camera);
+  // console.log(scene)
+  // mesh.rotation.x = Math.PI / 2;
 
   // Call tick again on the next frame
   window.requestAnimationFrame(tick);
 };
 
 tick();
+
+function buttonFunction() {
+  scene.traverse(function(child) {
+      let name = child.name.split('-')
+      console.log(name[0])
+    if (name[0] === "0") {
+      child.rotation.x += Math.PI / 2
+    }
+  });
+}
+
+
+var params = {
+  ClickMe: buttonFunction
+};
+
+var folder = gui.addFolder('Rotation');
+
+folder.add(params, 'ClickMe');
+
+folder.open();
