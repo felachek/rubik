@@ -1,12 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Rubik</title>
-</head>
-<body>
-    <canvas class="webgl"></canvas>
-</body>
-<script type="module" src="script.js"></script>
+  </head>
+  <body>
+    <div id="scene"></div>
+    <div id="controls">
+      <div id="axisY">
+        <button id="moveY0">Y 0</button>
+        <button id="moveY1">Y 1</button>
+        <button id="moveY2">Y 2</button>
+      </div>
+      <div id="axisX">
+        <button id="moveX2">X 2</button>
+        <button id="moveX1">X 1</button>
+        <button id="moveX0">X 0</button>
+      </div>
+      <div id="axisZ">
+        <button id="moveZ0">Z 0</button>
+        <button id="moveZ1">Z 1</button>
+        <button id="moveZ2">Z 2</button>
+      </div>
+      <button id="shuffle">Shuffle</button>
+      <button id="solve">Solve</button>
+    </div>
+  </body>
+  <script src="lib/three.js"></script>
+  <script src="lib/OrbitControls.js"></script>
+
+  <script type="module" src="script.js"></script>
 </html>
