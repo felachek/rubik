@@ -8,23 +8,21 @@
   <body>
     <div id="scene"></div>
     <div id="controls">
-      <div id="axisY">
-        <button id="moveY0">Y 0</button>
-        <button id="moveY1">Y 1</button>
-        <button id="moveY2">Y 2</button>
+      <div id="outer">
+        <button class="button_slide slide_down" id="moveY0">Y 0</button>
+        <button class="button_slide slide_down" id="moveY1">Y 1</button>
+        <button class="button_slide slide_down" id="moveY2">Y 2</button>
+
+        <button class="button_slide slide_right" id="moveX2">X 2</button>
+        <button class="button_slide slide_right" id="moveX1">X 1</button>
+        <button class="button_slide slide_right" id="moveX0">X 0</button>
+        
+        <button class="button_slide slide_left" id="moveZ2">Z 2</button>
+        <button class="button_slide slide_left" id="moveZ1">Z 1</button>
+        <button class="button_slide slide_left" id="moveZ0">Z 0</button>
       </div>
-      <div id="axisX">
-        <button id="moveX2">X 2</button>
-        <button id="moveX1">X 1</button>
-        <button id="moveX0">X 0</button>
-      </div>
-      <div id="axisZ">
-        <button id="moveZ0">Z 0</button>
-        <button id="moveZ1">Z 1</button>
-        <button id="moveZ2">Z 2</button>
-      </div>
-      <button id="shuffle">Shuffle</button>
-      <button id="solve">Solve</button>
+      <button id="shuffle" class="button_slide slide_diagonal">Shuffle</button>
+      <button id="solve" class="button_slide slide_diagonal">Solve</button>
     </div>
   </body>
   <script src="lib/three.js"></script>

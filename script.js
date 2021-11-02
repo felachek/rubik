@@ -1,36 +1,34 @@
+import { getArrayRandomElement } from "./utils";
 import "./style.css";
-// import * as THREE from "three";
-// import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 //canvas
 var element = document.getElementById("scene");
 
-var scene = new THREE.Scene(),
-  camera = new THREE.PerspectiveCamera(
+var scene = new THREE.Scene();
+var camera = new THREE.PerspectiveCamera(
     20,
     element.offsetWidth / element.offsetHeight,
     0.1,
     2000
-  ),
-  renderer = new THREE.WebGLRenderer({ antialias: true });
+  );
+var renderer = new THREE.WebGLRenderer({ antialias: true });
 
-renderer.setClearColor(0xeeeeee, 1.0);
+renderer.setClearColor(0x008080, 1.0);
 renderer.setSize(element.offsetWidth, element.offsetHeight);
 
 camera.position.set(-30, 40, 30);
 camera.lookAt(scene.position);
-// var controls = new OrbitControls(camera, renderer.domElement);
 var controls = new THREE.OrbitControls(camera, renderer.domElement);
 controls.addEventListener("change", render);
 
-scene.add(new THREE.AxisHelper(20));
+// scene.add(new THREE.AxisHelper(20));
 scene.add(new THREE.AmbientLight(0xffffff));
 element.append(renderer.domElement);
 
 //Cube geometry
-var cubeSize = 3,
-  dimensions = 3,
-  spacing = 0.5;
+var cubeSize = 3;
+var dimensions = 3;
+var spacing = 0.5;
 
 //Cube materials
 var colours = [0xc41e3a, 0x009e60, 0x0051ba, 0xff5800, 0xffd500, 0xffffff],
@@ -40,13 +38,12 @@ var colours = [0xc41e3a, 0x009e60, 0x0051ba, 0xff5800, 0xffd500, 0xffffff],
 var cubeMaterials = new THREE.MeshFaceMaterial(faceMaterials);
 
 //Cube construction
-var allCubes = [],
-  pivot = new THREE.Object3D();
+var allCubes = [];
+var pivot = new THREE.Object3D();
 
 function newCube(x, y, z) {
-  var cubeGeometry = new THREE.CubeGeometry(cubeSize, cubeSize, cubeSize),
-    //   var cubeGeometry = new THREE.BoxBufferGeometry(cubeSize, cubeSize, cubeSize),
-    cube = new THREE.Mesh(cubeGeometry, cubeMaterials);
+  var cubeGeometry = new THREE.CubeGeometry(cubeSize, cubeSize, cubeSize);
+  var cube = new THREE.Mesh(cubeGeometry, cubeMaterials);
   cube.position.set(x, y, z), scene.add(cube);
   allCubes.push(cube);
 }
@@ -68,35 +65,34 @@ function render() {
   renderer.render(scene, camera);
 }
 
+//Possible directions
+const counterClockwise = -Math.PI / 10;
+const clockwise = Math.PI / 10;
+
+const undoList = []
+
 //Move all cubes with value 'v' on axis 'axis'
-function move(v, axis, rotation) {
+function move(v, axis, direction) {
   var activeCubes = [];
 
   allCubes.forEach(function (cube) {
     var cubePosition = cube.position.clone();
-
     if (Math.abs(cubePosition[axis] - v) < 0.0001) activeCubes.push(cube);
   });
 
   pivot.rotation.set(0, 0, 0);
   pivot.updateMatrixWorld();
-  console.log(pivot);
+  scene.add(pivot);
 
   activeCubes.forEach(function (cube) {
     THREE.SceneUtils.attach(cube, scene, pivot);
-    // pivot.add(cube);
-    // scene.add(pivot);
   });
 
-  pivot.rotation[axis] = rotation;
+  pivot.rotation[axis] = direction;
   pivot.updateMatrixWorld();
-  //   pivot.children = []
-  //   pivot.clear()
   activeCubes.forEach(function (cube) {
     cube.updateMatrixWorld();
     THREE.SceneUtils.detach(cube, pivot, scene);
-    // scene.remove(pivot);
-    // pivot.remove(cube);
   });
 
   render();
@@ -105,63 +101,90 @@ function move(v, axis, rotation) {
 //Render the initial state
 render();
 
-const counterClockwise = -Math.PI / 2;
-const clockwise = Math.PI / 2;
-
-//Pre-canned demo moves
-document.getElementById("moveY0").addEventListener("click", function () {
-  move(3.5, "y", clockwise);
-});
-document.getElementById("moveY1").addEventListener("click", function () {
-  move(0, "y", clockwise);
-});
-document.getElementById("moveY2").addEventListener("click", function () {
-  move(-3.5, "y", clockwise);
-});
-document.getElementById("moveX0").addEventListener("click", function () {
-  move(3.5, "x", clockwise);
-});
-document.getElementById("moveX1").addEventListener("click", function () {
-  move(0, "x", clockwise);
-});
-document.getElementById("moveX2").addEventListener("click", function () {
-  move(-3.5, "x", clockwise);
-});
-document.getElementById("moveZ0").addEventListener("click", function () {
-  move(3.5, "z", clockwise);
-});
-document.getElementById("moveZ1").addEventListener("click", function () {
-  move(0, "z", clockwise);
-});
-document.getElementById("moveZ2").addEventListener("click", function () {
-  move(-3.5, "z", clockwise);
-});
-
-//shuffle part
-function getArrayRandomElement(arr) {
-  if (arr && arr.length) {
-    return arr[Math.floor(Math.random() * arr.length)];
+//User actions
+function animateMovement(v, axis, direction, isDoingUndo) {
+  for (let i = 0; i < 5; i++) {
+    setTimeout(function () {
+      move(v, axis, direction);
+    }, 30 * i);
+  }
+  if(!isDoingUndo){
+    undoList.push({v, axis, direction: direction * -1 })
+  }else{
+    undoList.shift()
   }
 }
-function shuffle(v, axis, rotation, i) {
-  setTimeout(function () {
-    move(v, axis, rotation);
-  }, 200 * i);
+
+function undo(v, axis, direction, duration) {
+  setTimeout(() => {
+    animateMovement(
+      v,
+      axis,
+      direction,
+      true
+    )
+  }, 200 * duration);
 }
-document.getElementById("shuffle").addEventListener("click", function () {
+
+function shuffle() {
   const axis = ["x", "y", "z"];
   const v = [-3.5, 0, 3.5];
-  const rotation = [clockwise, counterClockwise];
-  for (let i = 0; i < 20; i++) {
-    shuffle(
-      getArrayRandomElement(v),
-      getArrayRandomElement(axis),
-      getArrayRandomElement(rotation),
-      i
-    );
-  }
-});
+  const direction = [clockwise, counterClockwise];
 
+  for (let i = 0; i < 30; i++) {
+    setTimeout(function () {
+      animateMovement(
+        getArrayRandomElement(v),
+        getArrayRandomElement(axis),
+        getArrayRandomElement(direction),
+        false
+      );
+    }, 200 * i);
+  }
+}
+
+//Y
+document
+  .getElementById("moveY0")
+  .addEventListener("click", () => animateMovement(3.5, "y", clockwise, false));
+document
+  .getElementById("moveY1")
+  .addEventListener("click", () => animateMovement(0, "y", clockwise, false));
+document
+  .getElementById("moveY2")
+  .addEventListener("click", () => animateMovement(-3.5, "y", clockwise, false));
+//X
+document
+  .getElementById("moveX0")
+  .addEventListener("click", () => animateMovement(3.5, "x", clockwise, false));
+document
+  .getElementById("moveX1")
+  .addEventListener("click", () => animateMovement(0, "x", clockwise, false));
+document
+  .getElementById("moveX2")
+  .addEventListener("click", () => animateMovement(-3.5, "x", clockwise, false));
+//Z
+document
+  .getElementById("moveZ0")
+  .addEventListener("click", () => animateMovement(3.5, "z", clockwise, false));
+document
+  .getElementById("moveZ1")
+  .addEventListener("click", () => animateMovement(0, "z", clockwise, false));
+document
+  .getElementById("moveZ2")
+  .addEventListener("click", () => animateMovement(-3.5, "z", clockwise, false));
+
+//Suffle & Solve
+document.getElementById("shuffle").addEventListener("click", () => shuffle());
 document.getElementById("solve").addEventListener("click", function () {
-  move(-3.5, "z", counterClockwise);
+  let duration = 0;
+  for (var i = undoList.length - 1; i >= 0; i--) {
+    undo(
+      undoList[i].v,
+      undoList[i].axis,
+      undoList[i].direction,
+      duration,
+    )
+    duration++
+  }
 });
