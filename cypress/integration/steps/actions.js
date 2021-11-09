@@ -1,4 +1,4 @@
-import { When, Then, Given, And } from "cypress-cucumber-preprocessor/steps";
+import { When, Then } from "cypress-cucumber-preprocessor/steps";
 
 When(`the user click on {string}`, (buttonName) => {
   cy.get(`#${buttonName.toLowerCase()}`)

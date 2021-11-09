@@ -3,19 +3,11 @@
 
 /** @type {import("snowpack").SnowpackUserConfig } */
 module.exports = {
-  mount: {
-    /* ... */
-  },
-  plugins: [
-    /* ... */
-  ],
-  packageOptions: {
-    /* ... */
-  },
+  mount: {},
+  plugins: [],
+  packageOptions: {},
   devOptions: {
     port: 8080,
   },
-  buildOptions: {
-    /* ... */
-  },
+  buildOptions: {},
 };

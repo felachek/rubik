@@ -2,7 +2,6 @@
     "integrationFolder": "cypress/integration",
     "testFiles": "**/*.feature",
     "fixturesFolder": false,
-    "chromeWebSecurity": false,
     "defaultCommandTimeout": 20000,
     "pageLoadTimeout": 20000,
     "baseUrl": "http://localhost:8080"

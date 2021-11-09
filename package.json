@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "snowpack dev",
-    "cy:open": "cypress open"
+    "start": "snowpack dev --polyfill-node",
+    "cy:open": "cypress open",
+    "cy:cu": "cypress run --spec **/*.feature",
+    "cy:cu-record": "cypress run --record --browser electron --key 9b6e5891-d8e8-46be-a40d-a91b9bdd2146 --spec **/*.feature"
   },
   "author": "",
   "license": "ISC",
@@ -19,6 +21,7 @@
     "three": "^0.133.1"
   },
   "cypress-cucumber-preprocessor": {
-    "nonGlobalStepDefinitions": true
+    "nonGlobalStepDefinitions": true,
+    "step_definitions": "cypress/integration/steps"
   }
 }
