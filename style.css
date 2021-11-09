@@ -3,7 +3,7 @@ body {
   margin: 0;
   overflow: hidden;
   background-color: #008080;
-  overflow: auto;
+  overflow: hidden;
 }
 #scene {
   width: 600px;
@@ -11,8 +11,8 @@ body {
   margin: auto;
 }
 #controls {
-  height: 500px;
   text-align: center;
+  align-self: center;
 }
 #axisY  {
   display: grid;
@@ -27,6 +27,7 @@ body {
   display: inline-block;
   font-family: "Lucida Console", Monaco, monospace;
   font-size: 14px;
+  margin: 6px;
   letter-spacing: 1px;
   cursor: pointer;
   box-shadow: inset 0 0 0 0 #D80286;
@@ -52,7 +53,8 @@ body {
 }
 
 #outer {
-  width: 364px;
+  display: inline-block;
+  width: 100%;
   margin: 50px auto 0 auto;
   text-align: center;
 }
