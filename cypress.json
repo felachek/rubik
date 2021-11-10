@@ -4,5 +4,5 @@
     "fixturesFolder": false,
     "defaultCommandTimeout": 20000,
     "pageLoadTimeout": 20000,
-    "baseUrl": "http://localhost:8080"
+    "baseUrl": "http://localhost:8081"
 }

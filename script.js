@@ -115,7 +115,7 @@ function animateMovement(v, axis, direction, isDoingUndo) {
   }
 }
 
-function undo(v, axis, direction, duration) {
+function undo(v, axis, direction, duration, totalDuration) {
   setTimeout(() => {
     animateMovement(
       v,
@@ -123,10 +123,14 @@ function undo(v, axis, direction, duration) {
       direction,
       true
     )
+    if(duration === totalDuration-1){
+      disableAndEnableAllButtons(false)
+    }
   }, 200 * duration);
 }
 
 function shuffle() {
+  disableAndEnableAllButtons(true)
   const axis = ["x", "y", "z"];
   const v = [-3.5, 0, 3.5];
   const direction = [clockwise, counterClockwise];
@@ -139,44 +143,54 @@ function shuffle() {
         getArrayRandomElement(direction),
         false
       );
+      if(i === 29){
+        disableAndEnableAllButtons(false)
+      }
     }, 200 * i);
   }
+}
+
+function animateOneMovement(v, axis, direction, duration) {
+  disableAndEnableAllButtons(true)
+  animateMovement(v, axis, direction, duration)
+  disableAndEnableAllButtons(false)
 }
 
 //Y
 document
   .getElementById("moveY0")
-  .addEventListener("click", () => animateMovement(3.5, "y", clockwise, false));
+  .addEventListener("click", () => animateOneMovement(3.5, "y", clockwise, false));
 document
   .getElementById("moveY1")
-  .addEventListener("click", () => animateMovement(0, "y", clockwise, false));
+  .addEventListener("click", () => animateOneMovement(0, "y", clockwise, false));
 document
   .getElementById("moveY2")
-  .addEventListener("click", () => animateMovement(-3.5, "y", clockwise, false));
+  .addEventListener("click", () => animateOneMovement(-3.5, "y", clockwise, false));
 //X
 document
   .getElementById("moveX0")
-  .addEventListener("click", () => animateMovement(3.5, "x", clockwise, false));
+  .addEventListener("click", () => animateOneMovement(3.5, "x", clockwise, false));
 document
   .getElementById("moveX1")
-  .addEventListener("click", () => animateMovement(0, "x", clockwise, false));
+  .addEventListener("click", () => animateOneMovement(0, "x", clockwise, false));
 document
   .getElementById("moveX2")
-  .addEventListener("click", () => animateMovement(-3.5, "x", clockwise, false));
+  .addEventListener("click", () => animateOneMovement(-3.5, "x", clockwise, false));
 //Z
 document
   .getElementById("moveZ0")
-  .addEventListener("click", () => animateMovement(3.5, "z", clockwise, false));
+  .addEventListener("click", () => animateOneMovement(3.5, "z", clockwise, false));
 document
   .getElementById("moveZ1")
-  .addEventListener("click", () => animateMovement(0, "z", clockwise, false));
+  .addEventListener("click", () => animateOneMovement(0, "z", clockwise, false));
 document
   .getElementById("moveZ2")
-  .addEventListener("click", () => animateMovement(-3.5, "z", clockwise, false));
+  .addEventListener("click", () => animateOneMovement(-3.5, "z", clockwise, false));
 
 //Suffle & Solve
 document.getElementById("shuffle").addEventListener("click", () => shuffle());
 document.getElementById("solve").addEventListener("click", function () {
+  disableAndEnableAllButtons(true)
   let duration = 0;
   for (var i = undoList.length - 1; i >= 0; i--) {
     undo(
@@ -184,7 +198,15 @@ document.getElementById("solve").addEventListener("click", function () {
       undoList[i].axis,
       undoList[i].direction,
       duration,
+      undoList.length
     )
     duration++
   }
 });
+
+function disableAndEnableAllButtons(bool) {
+  var elements = document.getElementsByClassName('button_slide');
+  for(var i = 0; i < elements.length; i++){
+    elements[i].disabled = bool;
+  }
+}
