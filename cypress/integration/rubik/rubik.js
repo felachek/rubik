@@ -14,10 +14,7 @@ And(`the user see the rubik's cube completely {string}`, (name) => {
   cy.wait(2000);
   cy.get("canvas").toMatchImageSnapshot({
     name: `${name} cube`,
-  }).then((element) => {
-    Object.keys((element)).forEach((i) => cy.log(i))
-    Object.values((element)).forEach((i) => cy.log(i))
-  })
+  });
 });
 
 Given(`the user see the rubik's cube scrambled`, () => {
@@ -44,3 +41,19 @@ Given(`the user see the rubik's cube in iPad mode`, () => {
 Then(`the user see the background changing color to {string}`, (backgroundColor) => {
   cy.get("body").should('have.css', 'background-color', backgroundColor)
 })
+
+And(`the user see the counter equal {string}`, (number) => {
+  cy.get("#counter").contains(number)
+})
+
+Then(`the user see a modal {string}`, (text) => {
+  cy.get(".swal-text").contains(text)
+})
+
+And(`the user close the modal`, () => {
+  const stub = cy.stub()  
+    cy.on ('window:alert', stub)
+    cy.get('button.swal-button').contains('OK').click()
+})
+
+

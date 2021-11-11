@@ -28,7 +28,7 @@ But(`the user can not click on any button while the cube is rotating`, () => {
     let id = `#move${buttonName.replace(/\s+/g, "")}`;
     cy.get(id)
       .should("have.text", buttonName)
-      .click();
+      .should('be.disabled')
   });
 });
 

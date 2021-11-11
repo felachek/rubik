@@ -59,9 +59,25 @@ body {
   text-align: center;
 }
 
-#info {
+#info, #counter {
   color: white;
   height: 20px;
   width: 20px;
+  font-family: "Lucida Console", Monaco, monospace;
+}
+
+#info {
+  flex: 1
+}
+
+#header {
+  display: flex;
+}
+
+.swal-footer {
+  text-align: center;
+}
+
+.swal-modal {
   font-family: "Lucida Console", Monaco, monospace;
 }

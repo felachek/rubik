@@ -1,3 +1,4 @@
+import Swal from 'sweetalert'
 import { getArrayRandomElement } from "./utils";
 import "./style.css";
 
@@ -117,6 +118,7 @@ function animateMovement(v, axis, direction, isDoingUndo) {
 
 function undo(v, axis, direction, duration, totalDuration) {
   setTimeout(() => {
+    handleChangeCounter(false)
     animateMovement(
       v,
       axis,
@@ -124,11 +126,19 @@ function undo(v, axis, direction, duration, totalDuration) {
       true
     )
     if(duration === totalDuration-1){
+      handleChangeBackgroundColor(true)
       disableAndEnableAllButtons(false)
       document.getElementById('info').innerHTML = ""
+      Swal(
+        "Good job!",
+        `You solved the button in ${totalDuration} steps!`,
+        "success",
+      );
     }
   }, 200 * duration);
 }
+
+
 
 function shuffle() {
   let labelInfo = document.getElementById('info')
@@ -140,6 +150,8 @@ function shuffle() {
 
   for (let i = 0; i < 20; i++) {
     setTimeout(function () {
+      handleChangeBackgroundColor(false)
+      handleChangeCounter(true)
       animateMovement(
         getArrayRandomElement(v),
         getArrayRandomElement(axis),
@@ -154,10 +166,35 @@ function shuffle() {
   }
 }
 
+function handleChangeCounter(incrementValue){
+  const counter = document.getElementById('counter')
+  var value = parseInt(counter.innerHTML);
+
+    if(incrementValue){
+      counter.innerHTML = ++value;
+    }else{
+      counter.innerHTML = --value;
+    }
+}
+
+function handleChangeBackgroundColor(isCounterEqualZero) {
+  var body = document.getElementsByTagName("body")[0]
+  var html = document.getElementsByTagName("html")[0]
+
+  if(isCounterEqualZero){
+    body.style = 'background: #008080'
+    html.style = 'background: #008080'
+    renderer.setClearColor(0x008080, 1.0);
+  }else{
+    body.style = 'background: #3f51b5'
+    html.style = 'background: #3f51b5'
+    renderer.setClearColor(0x3f51b5, 1.0);
+  }
+}
+
 function animateOneMovement(v, axis, direction, duration) {
-  document.getElementsByTagName("body")[0].style = 'background: #3f51b5'
-  document.getElementsByTagName("html")[0].style = 'background: #3f51b5'
-  renderer.setClearColor(0x3f51b5, 1.0);
+  handleChangeCounter(true)
+  handleChangeBackgroundColor(false)
   disableAndEnableAllButtons(true)
   animateMovement(v, axis, direction, duration)
   disableAndEnableAllButtons(false)
