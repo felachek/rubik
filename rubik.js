@@ -107,7 +107,7 @@ function animateMovement(v, axis, direction, isDoingUndo) {
   for (let i = 0; i < 5; i++) {
     setTimeout(function () {
       move(v, axis, direction);
-    }, 20 * i);
+    }, 10 * i);
   }
   if(!isDoingUndo){
     undoList.push({v, axis, direction: direction * -1 })
@@ -135,7 +135,7 @@ function undo(v, axis, direction, duration, totalDuration) {
         "success",
       );
     }
-  }, 200 * duration);
+  }, 500 * duration);
 }
 
 
@@ -162,7 +162,7 @@ function shuffle() {
         disableAndEnableAllButtons(false)
         labelInfo.innerHTML = ""
       }
-    }, 200 * i);
+    }, 500 * i);
   }
 }
 
