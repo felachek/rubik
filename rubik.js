@@ -148,7 +148,7 @@ function shuffle() {
   const v = [-3.5, 0, 3.5];
   const direction = [clockwise, counterClockwise];
 
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < 10; i++) {
     setTimeout(function () {
       handleChangeBackgroundColor(false)
       handleChangeCounter(true)
@@ -158,7 +158,7 @@ function shuffle() {
         getArrayRandomElement(direction),
         false
       );
-      if(i === 19){
+      if(i === 9){
         disableAndEnableAllButtons(false)
         labelInfo.innerHTML = ""
       }
