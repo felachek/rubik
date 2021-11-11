@@ -155,6 +155,9 @@ function shuffle() {
 }
 
 function animateOneMovement(v, axis, direction, duration) {
+  document.getElementsByTagName("body")[0].style = 'background: #3f51b5'
+  document.getElementsByTagName("html")[0].style = 'background: #3f51b5'
+  renderer.setClearColor(0x3f51b5, 1.0);
   disableAndEnableAllButtons(true)
   animateMovement(v, axis, direction, duration)
   disableAndEnableAllButtons(false)
