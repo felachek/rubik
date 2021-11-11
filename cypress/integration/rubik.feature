@@ -20,11 +20,11 @@ Feature: Rubik's cube
         When the user click on "Z 1" for a single rotation
         Then the user see the background changing color to "rgb(63, 81, 181)"
 
-    Scenario: Easter Egg
-        Given the user do not want to play anymore with the cube
-        When the user visit a other route
-        Then the user see a enigma
-        And the user type ""
+    # Scenario: Easter Egg
+    #     Given the user do not want to play anymore with the cube
+    #     When the user visit a other route
+    #     Then the user see a enigma
+    #     And the user type ""
 
 
 
