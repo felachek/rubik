@@ -106,7 +106,7 @@ function animateMovement(v, axis, direction, isDoingUndo) {
   for (let i = 0; i < 5; i++) {
     setTimeout(function () {
       move(v, axis, direction);
-    }, 30 * i);
+    }, 20 * i);
   }
   if(!isDoingUndo){
     undoList.push({v, axis, direction: direction * -1 })
@@ -125,17 +125,20 @@ function undo(v, axis, direction, duration, totalDuration) {
     )
     if(duration === totalDuration-1){
       disableAndEnableAllButtons(false)
+      document.getElementById('info').innerHTML = ""
     }
   }, 200 * duration);
 }
 
 function shuffle() {
+  let labelInfo = document.getElementById('info')
+  labelInfo.innerHTML = "Shuffling..."
   disableAndEnableAllButtons(true)
   const axis = ["x", "y", "z"];
   const v = [-3.5, 0, 3.5];
   const direction = [clockwise, counterClockwise];
 
-  for (let i = 0; i < 30; i++) {
+  for (let i = 0; i < 20; i++) {
     setTimeout(function () {
       animateMovement(
         getArrayRandomElement(v),
@@ -143,8 +146,9 @@ function shuffle() {
         getArrayRandomElement(direction),
         false
       );
-      if(i === 29){
+      if(i === 19){
         disableAndEnableAllButtons(false)
+        labelInfo.innerHTML = ""
       }
     }, 200 * i);
   }
@@ -190,17 +194,21 @@ document
 //Suffle & Solve
 document.getElementById("shuffle").addEventListener("click", () => shuffle());
 document.getElementById("solve").addEventListener("click", function () {
-  disableAndEnableAllButtons(true)
-  let duration = 0;
-  for (var i = undoList.length - 1; i >= 0; i--) {
-    undo(
-      undoList[i].v,
-      undoList[i].axis,
-      undoList[i].direction,
-      duration,
-      undoList.length
-    )
-    duration++
+  if(undoList.length > 0) {
+    let labelInfo = document.getElementById('info')
+    labelInfo.innerHTML = "Solving..."
+    disableAndEnableAllButtons(true)
+    let duration = 0;
+    for (var i = undoList.length - 1; i >= 0; i--) {
+      undo(
+        undoList[i].v,
+        undoList[i].axis,
+        undoList[i].direction,
+        duration,
+        undoList.length
+      )
+      duration++
+    }
   }
 });
 

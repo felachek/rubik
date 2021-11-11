@@ -1,14 +1,21 @@
 import { When, Then } from "cypress-cucumber-preprocessor/steps";
 
 When(`the user click on {string}`, (buttonName) => {
-  cy.wait(1000)
   cy.get(`#${buttonName.toLowerCase()}`)
     .should("have.text", buttonName)
     .click();
-    cy.wait(8000)
 });
 
-Then(`the user can not click on any button`, () => {
+When(`the user click on {string} for a single rotation`, (buttonName) => {
+  let id = `#move${buttonName.replace(/\s+/g, "")}`;
+  cy.log(id)
+  cy.get(id)
+    .should("have.text", buttonName)
+    .click();
+  cy.wait(5000)
+});
+
+Then(`the user can not click on any button while the cube is rotating`, () => {
   const buttons = [
     "Y 0",
     "Y 1",
@@ -22,11 +29,9 @@ Then(`the user can not click on any button`, () => {
   ];
   buttons.forEach((buttonName) => {
     let id = `#move${buttonName.replace(/\s+/g, "")}`;
-    cy.wait(1000)
     cy.get(id)
       .should("have.text", buttonName)
       .click();
-    cy.wait(1000)
   });
 });
 
